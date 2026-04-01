@@ -8,7 +8,13 @@ use crate::controller_manager::ControllerManager;
 fn main() {
     let controller_manager = ControllerManager::new();
     loop {
-        println!("{:?}", controller_manager.get_list().len());
+        if (controller_manager.get_list().len() < 1) {
+            continue
+        }
+
+        let mut controller_state = controller_manager.update_controller_state_by_index(0).unwrap();
+        print!("{:?}, {:?}, {:?}", controller_state.get_axis_value(0).unwrap(), controller_state.get_axis_value(1).unwrap(), controller_state.get_axis_value(2).unwrap());
+        println!();
     }
 
     /*let hid = HidApi::new().unwrap();

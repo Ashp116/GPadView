@@ -7,7 +7,6 @@ use crate::controller_state::ControllerState;
 
 pub struct ControllerManager {
     game_controllers: Arc<Mutex<HashMap<String, ControllerState>>>,
-    hid: Arc<HidApi>,
     token_added: Option<EventRegistrationToken>,
     token_removed: Option<EventRegistrationToken>,
 }
@@ -54,7 +53,6 @@ impl ControllerManager {
         ).unwrap();
 
         Self {
-            hid,
             game_controllers,
             token_added: Some(token_added),
             token_removed: Some(token_removed),
@@ -67,5 +65,34 @@ impl ControllerManager {
 
     pub fn get_controller(&self, id: String) -> Option<ControllerState> {
         self.game_controllers.lock().unwrap().get(id.as_str()).cloned()
+    }
+
+    pub fn is_controller_connected(&self, id: String) -> bool {
+        self.game_controllers.lock().unwrap().contains_key(id.as_str()).clone()
+    }
+
+    pub fn update_controller_state_by_index(&self, index: usize) -> Option<ControllerState> {
+        let id = self.get_list().get(index)?.clone();
+        self.update_controller_state(id)
+    }
+
+    pub fn update_controller_state(&self, id: String) -> Option<ControllerState> {
+        let mut guard = self.game_controllers.lock().unwrap();
+        let state = guard.get_mut(id.as_str())?;
+
+        state.update();
+        Some(state.clone())
+    }
+}
+
+impl Drop for ControllerManager {
+    fn drop(&mut self) {
+        if let Some(token) = self.token_added.take() {
+            RawGameController::RemoveRawGameControllerAdded(token).unwrap();
+        }
+
+        if let Some(token) = self.token_removed.take() {
+            RawGameController::RemoveRawGameControllerRemoved(token).unwrap();
+        }
     }
 }
