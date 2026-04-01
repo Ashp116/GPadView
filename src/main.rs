@@ -1,10 +1,17 @@
-mod ControllerState;
+mod controller_state;
+mod controller_manager;
 
 use hidapi::HidApi;
 use windows::Gaming::Input::RawGameController;
+use crate::controller_manager::ControllerManager;
 
 fn main() {
-    let hid = HidApi::new().unwrap();
+    let controller_manager = ControllerManager::new();
+    loop {
+        println!("{:?}", controller_manager.get_list().len());
+    }
+
+    /*let hid = HidApi::new().unwrap();
 
 
     loop {
@@ -21,12 +28,6 @@ fn main() {
             let vid = controller.HardwareVendorId().unwrap();
             let pid = controller.HardwareProductId().unwrap();
 
-            let name = hid.device_list()
-                .find(|d| d.vendor_id() == vid && d.product_id() == pid)
-                .and_then(|d| d.product_string())
-                .unwrap_or("Unknown");
-
-            println!("=== {} ===", name);
             // println!("  Buttons: {}", button_count);
             // println!("  Axes:    {}", axis_count);
             // println!("  Switches (POV hats): {}", switch_count);
@@ -62,5 +63,5 @@ fn main() {
         }
 
         std::thread::sleep(std::time::Duration::from_millis(16));
-    }
+    }*/
 }

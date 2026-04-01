@@ -6,7 +6,8 @@ edition = "2024"
 [dependencies]
 windows = { version = "0.58", features = [
     "Gaming_Input",
-    "Gaming_Input_ForceFeedback",
     "Foundation_Collections",
+    "Win32_System_WinRT",
+    "Foundation",
 ] }
 hidapi = "2.6"

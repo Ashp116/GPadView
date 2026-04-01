@@ -1,0 +1,71 @@
+use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
+use hidapi::HidApi;
+use windows::Foundation::{EventHandler, EventRegistrationToken};
+use windows::Gaming::Input::RawGameController;
+use crate::controller_state::ControllerState;
+
+pub struct ControllerManager {
+    game_controllers: Arc<Mutex<HashMap<String, ControllerState>>>,
+    hid: Arc<HidApi>,
+    token_added: Option<EventRegistrationToken>,
+    token_removed: Option<EventRegistrationToken>,
+}
+
+impl ControllerManager {
+    pub fn new() -> Self{
+        let game_controllers: Arc<Mutex<HashMap<String, ControllerState>>> = Arc::new(Mutex::new(HashMap::new()));
+        let hid = Arc::new(HidApi::new().unwrap());
+
+        // Get all the connected controllers
+        let controllers = RawGameController::RawGameControllers().unwrap();
+        let controller_count = controllers.Size().unwrap();
+
+        for i in 0..controller_count {
+            let controller = controllers.GetAt(i).unwrap();
+            game_controllers.lock().unwrap().insert(controller.NonRoamableId().unwrap().to_string(), ControllerState::new(controller, &hid));
+        }
+
+        // Events for changes in connected controllers
+        let controllers_clone = Arc::clone(&game_controllers);
+        let hid_clone = Arc::clone(&hid);
+
+        let token_added = RawGameController::RawGameControllerAdded(
+            &EventHandler::<RawGameController>::new(move |_, controller| {
+                if let Some(c) = controller {
+                    let id = c.NonRoamableId().unwrap().to_string();
+                    let state = ControllerState::new(c.clone(), &hid_clone);
+                    controllers_clone.lock().unwrap().insert(id, state);
+                }
+                Ok(())
+            })
+        ).unwrap();
+
+        let controllers_clone2 = Arc::clone(&game_controllers);
+
+        let token_removed = RawGameController::RawGameControllerRemoved(
+            &EventHandler::<RawGameController>::new(move |_, controller| {
+                if let Some(c) = controller {
+                    let id = c.NonRoamableId().unwrap().to_string();
+                    controllers_clone2.lock().unwrap().remove(&id);
+                }
+                Ok(())
+            })
+        ).unwrap();
+
+        Self {
+            hid,
+            game_controllers,
+            token_added: Some(token_added),
+            token_removed: Some(token_removed),
+        }
+    }
+
+    pub fn get_list(&self) -> Vec<String> {
+        self.game_controllers.lock().unwrap().keys().cloned().collect()
+    }
+
+    pub fn get_controller(&self, id: String) -> Option<ControllerState> {
+        self.game_controllers.lock().unwrap().get(id.as_str()).cloned()
+    }
+}
