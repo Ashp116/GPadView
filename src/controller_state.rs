@@ -24,10 +24,10 @@ impl ControllerState {
         let axis_count = raw_game_controller.AxisCount().unwrap() as usize;
         let switch_count = raw_game_controller.SwitchCount().unwrap() as usize;
 
-        let mut buttons = vec![false; button_count];
-        let mut axis = vec![0.0f64; axis_count];
-        let mut switches = vec![
-            windows::Gaming::Input::GameControllerSwitchPosition::Center;
+        let buttons = vec![false; button_count];
+        let axis = vec![0.0f64; axis_count];
+        let switches = vec![
+            GameControllerSwitchPosition::Center;
             switch_count
         ];
 
