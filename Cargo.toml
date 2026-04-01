@@ -4,4 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-gilrs = "0.11.1"
+windows = { version = "0.58", features = [
+    "Gaming_Input",
+    "Gaming_Input_ForceFeedback",
+    "Foundation_Collections",
+] }
+hidapi = "2.6"
