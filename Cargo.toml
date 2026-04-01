@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-windows = { version = "0.58", features = [
+windows = { version = "0.62.2", features = [
     "Gaming_Input",
     "Foundation_Collections",
     "Win32_System_WinRT",

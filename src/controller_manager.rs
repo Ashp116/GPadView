@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use hidapi::HidApi;
-use windows::Foundation::{EventHandler, EventRegistrationToken};
+use windows::Foundation::{EventHandler};
 use windows::Gaming::Input::RawGameController;
 use crate::controller_state::ControllerState;
 
 pub struct ControllerManager {
     game_controllers: Arc<Mutex<HashMap<String, ControllerState>>>,
-    token_added: Option<EventRegistrationToken>,
-    token_removed: Option<EventRegistrationToken>,
+    token_added: Option<i64>,
+    token_removed: Option<i64>,
 }
 
 impl ControllerManager {
@@ -31,11 +31,10 @@ impl ControllerManager {
 
         let token_added = RawGameController::RawGameControllerAdded(
             &EventHandler::<RawGameController>::new(move |_, controller| {
-                if let Some(c) = controller {
-                    let id = c.NonRoamableId().unwrap().to_string();
-                    let state = ControllerState::new(c.clone(), &hid_clone);
-                    controllers_clone.lock().unwrap().insert(id, state);
-                }
+                let c = controller.unwrap();
+                let id = c.NonRoamableId().unwrap().to_string();
+                let state = ControllerState::new(c.clone(), &hid_clone);
+                controllers_clone.lock().unwrap().insert(id, state);
                 Ok(())
             })
         ).unwrap();
@@ -44,10 +43,9 @@ impl ControllerManager {
 
         let token_removed = RawGameController::RawGameControllerRemoved(
             &EventHandler::<RawGameController>::new(move |_, controller| {
-                if let Some(c) = controller {
-                    let id = c.NonRoamableId().unwrap().to_string();
-                    controllers_clone2.lock().unwrap().remove(&id);
-                }
+                let c = controller.unwrap();
+                let id = c.NonRoamableId().unwrap().to_string();
+                controllers_clone2.lock().unwrap().remove(&id);
                 Ok(())
             })
         ).unwrap();
