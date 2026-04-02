@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/icon.png" alt="image" />
+</div>
+
 # GPad View
 
 A Windows gamepad/controller inspector built with Rust.
