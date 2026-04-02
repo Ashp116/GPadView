@@ -49,10 +49,7 @@ impl ControllerState {
             self.axis.as_mut_slice()
         ).expect("Invalid Current Reading");
     }
-
-    pub fn get_name(&self) -> String {
-        self.name.clone()
-    }
+    
     pub fn get_button_state(&self, index: usize) -> Option<&bool> {
         self.buttons.get(index)
     }

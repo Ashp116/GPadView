@@ -61,9 +61,6 @@ impl ControllerManager {
         }
     }
 
-    pub fn get_list(&self) -> HashMap<String, ControllerState> {
-        self.game_controllers.lock().unwrap().clone()
-    }
 
     pub fn get_id_list(&self) -> Vec<String> {
         self.game_controllers.lock().unwrap().keys().cloned().collect()
