@@ -31,9 +31,9 @@ pub fn show_detail(ui: &mut egui::Ui, controller: Option<&ControllerState>) -> b
         ui.add_space(side_padding);
         let back_response = ui.add(
             egui::Button::new(
-                egui::RichText::new("< Back")
+                egui::RichText::new("Back")
                     .color(Color32::from_rgb(0, 220, 180))
-                    .size(14.0),
+                    .size(24.0),
             )
                 .fill(Color32::from_rgb(18, 18, 28))
                 .stroke(Stroke::new(1.0, Color32::from_rgb(0, 180, 140)))
@@ -105,24 +105,13 @@ pub fn show_detail(ui: &mut egui::Ui, controller: Option<&ControllerState>) -> b
 
                         painter.rect_filled(rect, CornerRadius::same(4), Color32::from_rgb(20, 20, 32));
 
-                        let center_x = rect.center().x;
-                        let fill_width = (value as f32).clamp(-1.0, 1.0) * (rect.width() / 2.0);
-                        let fill_rect = if fill_width >= 0.0 {
-                            egui::Rect::from_min_max(
-                                egui::pos2(center_x, rect.min.y + 2.0),
-                                egui::pos2((center_x + fill_width).min(rect.max.x), rect.max.y - 2.0),
-                            )
-                        } else {
-                            egui::Rect::from_min_max(
-                                egui::pos2((center_x + fill_width).max(rect.min.x), rect.min.y + 2.0),
-                                egui::pos2(center_x, rect.max.y - 2.0),
-                            )
-                        };
-                        painter.rect_filled(fill_rect, CornerRadius::same(3), Color32::from_rgb(0, 200, 160));
-                        painter.line_segment(
-                            [egui::pos2(center_x, rect.min.y), egui::pos2(center_x, rect.max.y)],
-                            Stroke::new(1.0, Color32::from_rgb(50, 50, 70)),
+                        let fill_width = (value as f32).clamp(0.0, 1.0) * (rect.width());
+                        let fill_rect = egui::Rect::from_min_max(
+                                egui::pos2(rect.min.x, rect.min.y + 2.0),
+                                egui::pos2((rect.min.x + fill_width).min(rect.max.x), rect.max.y - 2.0),
                         );
+
+                        painter.rect_filled(fill_rect, CornerRadius::same(3), Color32::from_rgb(0, 200, 160));
 
                         ui.add_space(8.0);
                         ui.label(
