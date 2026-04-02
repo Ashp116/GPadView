@@ -10,9 +10,13 @@ windows = { version = "0.62.2", features = [
     "Win32_System_WinRT",
     "Foundation",
 ] }
+image = "0.25.10"
 hidapi = "2.6"
 egui = "0.34.1"
 eframe = { version = "0.34.1", features = ["persistence"] }
+
+[build-dependencies]
+winres = "0.1.12"
 
 [profile.release]
 opt-level = 3

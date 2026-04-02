@@ -1,18 +1,27 @@
 #![windows_subsystem = "windows"]
-use crate::app::App;
-use crate::controller_manager::ControllerManager;
 
+use image;
+use crate::app::App;
 mod controller_state;
 mod controller_manager;
 mod views;
 mod app;
 
-
 fn main() {
+    let icon_data = include_bytes!("../assets/icon.png");
+    let image = image::load_from_memory(icon_data).unwrap().to_rgba8();
+    let (width, height) = image.dimensions();
+
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_inner_size([420.0, 600.0])
-            .with_title("JoyView"),
+            .with_inner_size([800.0, 600.0])
+            .with_title("GPadView")
+            .with_visible(false)
+            .with_icon(egui::IconData {
+                rgba: image.into_raw(),
+                width,
+                height,
+            }),
         ..Default::default()
     };
 
