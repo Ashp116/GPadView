@@ -55,8 +55,8 @@ impl eframe::App for App {
 
                         self.controller_manager.update_controller_state_by_index(index);
                         let state = controllers.get(index);
-
-                        if show_detail(ui, &state.unwrap()) {
+                        
+                        if show_detail(ui, state) {
                             self.view = View::ControllerList;
                         }
                     }
