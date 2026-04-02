@@ -2,11 +2,9 @@
 
 A Windows gamepad/controller inspector built with Rust.
 
-## Screenshots
+## Demo
 
-<div align="center">
-  <img src="assets/demo/img.png" width="70%" style="border-radius: 12px;"  />
-</div>
+https://github.com/user-attachments/assets/a4084fe7-5427-4035-ac36-cba75eecfc3d
 
 ## Requirements
 
