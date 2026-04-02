@@ -3,6 +3,7 @@ use windows::Gaming::Input::{GameControllerSwitchPosition, RawGameController};
 
 #[derive(Clone)]
 pub struct ControllerState {
+    pub id: String,
     pub name: String,
     pub buttons: Vec<bool>,
     pub axis: Vec<f64>,
@@ -34,6 +35,7 @@ impl ControllerState {
         ];
 
         Self {
+            id: raw_game_controller.NonRoamableId().unwrap().to_string(),
             name: String::from(name),
             buttons,
             axis,

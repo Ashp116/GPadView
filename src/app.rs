@@ -2,14 +2,13 @@ use eframe::{egui, Frame};
 use eframe::egui::Color32;
 use egui::Ui;
 use crate::controller_manager::ControllerManager;
-use crate::controller_state::ControllerState;
 use crate::views::{show_list, show_detail};
 
 #[derive(Default)]
 pub enum View {
     #[default]
     ControllerList,
-    ControllerDetail(usize),
+    ControllerDetail(String),
 }
 
 pub struct App {
@@ -46,16 +45,14 @@ impl eframe::App for App {
             .show(ctx, |ui| {
                 match &self.view {
                     View::ControllerList => {
-                        if let Some(index) = show_list(ui, &controllers) {
-                            self.view = View::ControllerDetail(index);
+                        if let Some(id) = show_list(ui, &controllers) {
+                            self.view = View::ControllerDetail(id.clone());
                         }
                     }
-                    View::ControllerDetail(index) => {
-                        let index = *index;
-
-                        self.controller_manager.update_controller_state_by_index(index);
-                        let state = controllers.get(index);
-                        
+                    View::ControllerDetail(id) => {
+                        let id = id.clone();
+                        self.controller_manager.update_controller_state(&id);
+                        let state = self.controller_manager.get_controller(&id);
                         if show_detail(ui, state) {
                             self.view = View::ControllerList;
                         }

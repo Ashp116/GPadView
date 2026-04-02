@@ -1,7 +1,7 @@
 use egui::{self, Color32, CornerRadius, Stroke, Vec2};
 use crate::controller_state::ControllerState;
 
-pub fn show_list(ui: &mut egui::Ui, controllers: &[ControllerState]) -> Option<usize> {
+pub fn show_list(ui: &mut egui::Ui, controllers: &[ControllerState]) -> Option<String> {
     let mut clicked = None;
 
     let total_width = ui.available_width();
@@ -119,7 +119,7 @@ pub fn show_list(ui: &mut egui::Ui, controllers: &[ControllerState]) -> Option<u
                         );
 
                         if response.clicked() {
-                            clicked = Some(i);
+                            clicked = Some(controller.id.clone());
                         }
 
                         if (i + 1) % cols == 0 {

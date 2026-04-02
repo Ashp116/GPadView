@@ -70,8 +70,8 @@ impl ControllerManager {
         self.game_controllers.lock().unwrap().values().cloned().collect()
     }
 
-    pub fn get_controller(&self, id: String) -> Option<ControllerState> {
-        self.game_controllers.lock().unwrap().get(id.as_str()).cloned()
+    pub fn get_controller(&self, id: &str) -> Option<ControllerState> {
+        self.game_controllers.lock().unwrap().get(id).cloned()
     }
 
     pub fn is_controller_connected(&self, id: String) -> bool {
@@ -80,12 +80,12 @@ impl ControllerManager {
 
     pub fn update_controller_state_by_index(&self, index: usize) -> Option<ControllerState> {
         let id = self.get_id_list().get(index)?.clone();
-        self.update_controller_state(id)
+        self.update_controller_state(&*id)
     }
 
-    pub fn update_controller_state(&self, id: String) -> Option<ControllerState> {
+    pub fn update_controller_state(&self, id: &str) -> Option<ControllerState> {
         let mut guard = self.game_controllers.lock().unwrap();
-        let state = guard.get_mut(id.as_str())?;
+        let state = guard.get_mut(id)?;
 
         state.update();
         Some(state.clone())

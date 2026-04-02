@@ -1,7 +1,7 @@
 use egui::{self, Color32, CornerRadius, Stroke, Vec2};
 use crate::controller_state::ControllerState;
 
-pub fn show_detail(ui: &mut egui::Ui, controller: Option<&ControllerState>) -> bool {
+pub fn show_detail(ui: &mut egui::Ui, controller: Option<ControllerState>) -> bool {
     let controller = match controller {
         Some(c) => c,
         None => return true,
