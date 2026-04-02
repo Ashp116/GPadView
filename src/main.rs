@@ -16,9 +16,7 @@ fn main() {
         ..Default::default()
     };
 
-    let controller_manager = ControllerManager::new();
-
-    eframe::run_native("GPadView", options, Box::new(|_| Ok(Box::new(App::new(controller_manager))))).unwrap();
+    eframe::run_native("GPadView", options, Box::new(|_| Ok(Box::new(App::new())))).unwrap();
     // let controller_manager = ControllerManager::new();
     // loop {
     //     if (controller_manager.get_list().len() < 1) {
