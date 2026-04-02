@@ -32,7 +32,8 @@ pub fn show_detail(ui: &mut egui::Ui, controller: &ControllerState) -> bool {
             )
                 .fill(Color32::from_rgb(18, 18, 28))
                 .stroke(Stroke::new(1.0, Color32::from_rgb(0, 180, 140)))
-                .corner_radius(CornerRadius::same(8)),
+                .corner_radius(CornerRadius::same(8))
+                .frame(false),
         );
         if back_response.clicked() {
             go_back = true;
@@ -184,7 +185,7 @@ pub fn show_detail(ui: &mut egui::Ui, controller: &ControllerState) -> bool {
                 painter.text(
                     rect.center(),
                     egui::Align2::CENTER_CENTER,
-                    format!("{}", i),
+                    format!("{}", i + 1),
                     egui::FontId::proportional(btn_size * 0.3),
                     text_color,
                 );
