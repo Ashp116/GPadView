@@ -15,7 +15,7 @@ impl ControllerState {
         Self {
             name: "USB Gamepad".to_string(),
             buttons: vec![false, true, false, false, true, false, false, false, false, false, false, false],
-            axis: vec![0.5, -0.3, 0.0, 0.8, 0.1, -1.0],
+            axis: vec![0.5, -0.3, 0.0, 0.8, 0.1, -10.0],
             switches: vec![
                 GameControllerSwitchPosition::Center;
                 0
@@ -23,7 +23,7 @@ impl ControllerState {
             raw_game_controller: None,
         }
     }
-    
+
     pub fn new(raw_game_controller: RawGameController, hid: &HidApi) -> Self {
         let vid = raw_game_controller.HardwareVendorId().unwrap();
         let pid = raw_game_controller.HardwareProductId().unwrap();

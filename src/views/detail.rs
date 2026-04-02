@@ -100,15 +100,15 @@ pub fn show_detail(ui: &mut egui::Ui, controller: &ControllerState) -> bool {
                         painter.rect_filled(rect, CornerRadius::same(4), Color32::from_rgb(20, 20, 32));
 
                         let center_x = rect.center().x;
-                        let fill_width = (value as f32) * (rect.width() / 2.0);
+                        let fill_width = (value as f32).clamp(-1.0, 1.0) * (rect.width() / 2.0);
                         let fill_rect = if fill_width >= 0.0 {
                             egui::Rect::from_min_max(
                                 egui::pos2(center_x, rect.min.y + 2.0),
-                                egui::pos2(center_x + fill_width, rect.max.y - 2.0),
+                                egui::pos2((center_x + fill_width).min(rect.max.x), rect.max.y - 2.0),
                             )
                         } else {
                             egui::Rect::from_min_max(
-                                egui::pos2(center_x + fill_width, rect.min.y + 2.0),
+                                egui::pos2((center_x + fill_width).max(rect.min.x), rect.min.y + 2.0),
                                 egui::pos2(center_x, rect.max.y - 2.0),
                             )
                         };
