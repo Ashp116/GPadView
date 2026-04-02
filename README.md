@@ -4,7 +4,7 @@
 
 # GPad View
 
-A Windows gamepad/controller inspector built with Rust.
+GPadView is a lightweight Windows utility for inspecting game controllers in real time. Built with Rust and egui, it detects any connected HID-compatible controller and displays live axis values, button states, and D-Pad inputs in a clean, modern interface. Designed for developers, modders, and hardware enthusiasts who need a fast and accurate view into what their controller is actually doing.
 
 ## Demo
 
