@@ -54,11 +54,11 @@ impl ControllerState {
     }
 
     pub fn update(&mut self) {
-        // self.raw_game_controller.unwrap().GetCurrentReading(
-        //     self.buttons.as_mut_slice(),
-        //     self.switches.as_mut_slice(),
-        //     self.axis.as_mut_slice()
-        // ).expect("Invalid Current Reading");
+        self.raw_game_controller.unwrap().GetCurrentReading(
+            self.buttons.as_mut_slice(),
+            self.switches.as_mut_slice(),
+            self.axis.as_mut_slice()
+        ).expect("Invalid Current Reading");
     }
 
     pub fn get_name(&self) -> String {
