@@ -27,6 +27,25 @@ pub fn show_list(ui: &mut egui::Ui, controllers: &[ControllerState]) -> Option<S
 
     ui.add_space(40.0);
 
+    if controllers.is_empty() {
+        ui.vertical_centered(|ui| {
+            ui.add_space(40.0);
+            ui.label(
+                egui::RichText::new("No controllers found")
+                    .size((inner_width * 0.04).clamp(16.0, 28.0))
+                    .color(Color32::from_rgb(60, 60, 80))
+                    .strong(),
+            );
+            ui.add_space(8.0);
+            ui.label(
+                egui::RichText::new("plug in a controller to get started")
+                    .size((inner_width * 0.025).clamp(11.0, 16.0))
+                    .color(Color32::from_rgb(50, 50, 70)),
+            );
+        });
+        return clicked;
+    }
+
     // Grid config
     let gap = (inner_width * 0.03).clamp(10.0, 24.0);
     let min_cell = (inner_width * 0.25).clamp(180.0, 320.0);
