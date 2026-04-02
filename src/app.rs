@@ -30,7 +30,7 @@ impl Default for App {
 }
 
 impl eframe::App for App {
-    fn ui(&mut self, ui: &mut Ui, frame: &mut Frame) {
+    fn ui(&mut self, _ui: &mut Ui, _frame: &mut Frame) {
 
     }
 

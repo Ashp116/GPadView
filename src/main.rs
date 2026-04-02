@@ -3,9 +3,6 @@ mod controller_manager;
 mod views;
 mod app;
 
-use hidapi::HidApi;
-use windows::Gaming::Input::RawGameController;
-use crate::controller_manager::ControllerManager;
 
 fn main() {
     let options = eframe::NativeOptions {
