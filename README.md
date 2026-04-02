@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/a4084fe7-5427-4035-ac36-cba75eecfc3d
 
 ## Installation
 
-Soon: Download the latest release from the [releases page](#) and run `gpadview.exe`.
+Download the latest release from the [releases page](./releases) and run `gpadview.exe`.
 
 ## Building from Source
 
@@ -28,8 +28,8 @@ Soon: Download the latest release from the [releases page](#) and run `gpadview.
 
 ### Steps
 ```bash
-git clone https://github.com/yourname/gpadview
-cd gpadview
+git clone https://github.com/Ashp116/GPadView.git
+cd GPadView
 cargo build --release
 ```
 
@@ -50,4 +50,4 @@ The compiled binary will be at `target/release/gpadview.exe`.
 - [hidapi](https://github.com/ruabmbua/hidapi-rs) — device name lookup
 
 ## License
-TODO
+MIT
