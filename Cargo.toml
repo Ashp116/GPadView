@@ -11,3 +11,5 @@ windows = { version = "0.62.2", features = [
     "Foundation",
 ] }
 hidapi = "2.6"
+egui = "0.34.1"
+eframe = { version = "0.34.1", features = ["persistence"] }

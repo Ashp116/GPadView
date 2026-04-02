@@ -1,21 +1,31 @@
 mod controller_state;
 mod controller_manager;
+mod views;
+mod app;
 
 use hidapi::HidApi;
 use windows::Gaming::Input::RawGameController;
 use crate::controller_manager::ControllerManager;
 
 fn main() {
-    let controller_manager = ControllerManager::new();
-    loop {
-        if (controller_manager.get_list().len() < 1) {
-            continue
-        }
+    let options = eframe::NativeOptions {
+        viewport: egui::ViewportBuilder::default()
+            .with_inner_size([420.0, 600.0])
+            .with_title("JoyView"),
+        ..Default::default()
+    };
 
-        let mut controller_state = controller_manager.update_controller_state_by_index(0).unwrap();
-        print!("{:?}, {:?}, {:?}", controller_state.get_axis_value(0).unwrap(), controller_state.get_axis_value(1).unwrap(), controller_state.get_axis_value(2).unwrap());
-        println!();
-    }
+    eframe::run_native("JoyView", options, Box::new(|_| Ok(Box::new(app::App::default())))).unwrap();
+    // let controller_manager = ControllerManager::new();
+    // loop {
+    //     if (controller_manager.get_list().len() < 1) {
+    //         continue
+    //     }
+    //
+    //     let mut controller_state = controller_manager.update_controller_state_by_index(0).unwrap();
+    //     print!("{:?}, {:?}, {:?}", controller_state.get_axis_value(0).unwrap(), controller_state.get_axis_value(1).unwrap(), controller_state.get_axis_value(2).unwrap());
+    //     println!();
+    // }
 
     /*let hid = HidApi::new().unwrap();
 
