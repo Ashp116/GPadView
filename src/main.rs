@@ -1,3 +1,6 @@
+use crate::app::App;
+use crate::controller_manager::ControllerManager;
+
 mod controller_state;
 mod controller_manager;
 mod views;
@@ -12,7 +15,9 @@ fn main() {
         ..Default::default()
     };
 
-    eframe::run_native("JoyView", options, Box::new(|_| Ok(Box::new(app::App::default())))).unwrap();
+    let controller_manager = ControllerManager::new();
+
+    eframe::run_native("JoyView", options, Box::new(|_| Ok(Box::new(App::new(controller_manager))))).unwrap();
     // let controller_manager = ControllerManager::new();
     // loop {
     //     if (controller_manager.get_list().len() < 1) {

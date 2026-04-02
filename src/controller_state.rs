@@ -6,28 +6,17 @@ pub struct ControllerState {
     pub name: String,
     pub buttons: Vec<bool>,
     pub axis: Vec<f64>,
-    pub switches: Vec<GameControllerSwitchPosition>,
-    pub raw_game_controller: Option<RawGameController>
+    switches: Vec<GameControllerSwitchPosition>,
+    raw_game_controller: RawGameController
 }
 
 impl ControllerState {
-    pub fn example() -> Self {
-        Self {
-            name: "USB Gamepad".to_string(),
-            buttons: vec![false, true, false, false, true, false, false, false, false, false, false, false],
-            axis: vec![0.5, -0.3, 0.0, 0.8, 0.1, -10.0],
-            switches: vec![
-                GameControllerSwitchPosition::Center;
-                0
-            ],
-            raw_game_controller: None,
-        }
-    }
 
-    pub fn new(raw_game_controller: RawGameController, hid: &HidApi) -> Self {
+    pub fn new(raw_game_controller: RawGameController, hid: &mut HidApi) -> Self {
         let vid = raw_game_controller.HardwareVendorId().unwrap();
         let pid = raw_game_controller.HardwareProductId().unwrap();
 
+        hid.refresh_devices().unwrap();
         let name = hid.device_list()
             .find(|d| d.vendor_id() == vid && d.product_id() == pid)
             .and_then(|d| d.product_string())
@@ -49,12 +38,12 @@ impl ControllerState {
             buttons,
             axis,
             switches,
-            raw_game_controller: Some(raw_game_controller)
+            raw_game_controller
         }
     }
 
     pub fn update(&mut self) {
-        self.raw_game_controller.unwrap().GetCurrentReading(
+        self.raw_game_controller.GetCurrentReading(
             self.buttons.as_mut_slice(),
             self.switches.as_mut_slice(),
             self.axis.as_mut_slice()

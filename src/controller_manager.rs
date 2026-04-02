@@ -14,7 +14,7 @@ pub struct ControllerManager {
 impl ControllerManager {
     pub fn new() -> Self{
         let game_controllers: Arc<Mutex<HashMap<String, ControllerState>>> = Arc::new(Mutex::new(HashMap::new()));
-        let hid = Arc::new(HidApi::new().unwrap());
+        let hid = Arc::new(Mutex::new(HidApi::new().unwrap()));
 
         // Get all the connected controllers
         let controllers = RawGameController::RawGameControllers().unwrap();
@@ -22,7 +22,9 @@ impl ControllerManager {
 
         for i in 0..controller_count {
             let controller = controllers.GetAt(i).unwrap();
-            game_controllers.lock().unwrap().insert(controller.NonRoamableId().unwrap().to_string(), ControllerState::new(controller, &hid));
+            let mut hid_guard = hid.lock().unwrap();
+            hid_guard.refresh_devices().unwrap();
+            game_controllers.lock().unwrap().insert(controller.NonRoamableId().unwrap().to_string(), ControllerState::new(controller, &mut hid_guard));
         }
 
         // Events for changes in connected controllers
@@ -33,7 +35,9 @@ impl ControllerManager {
             &EventHandler::<RawGameController>::new(move |_, controller| {
                 let c = controller.unwrap();
                 let id = c.NonRoamableId().unwrap().to_string();
-                let state = ControllerState::new(c.clone(), &hid_clone);
+                let mut hid_guard = hid_clone.lock().unwrap();
+                hid_guard.refresh_devices().unwrap();
+                let state = ControllerState::new(c.clone(), &mut hid_guard);
                 controllers_clone.lock().unwrap().insert(id, state);
                 Ok(())
             })
@@ -57,8 +61,16 @@ impl ControllerManager {
         }
     }
 
-    pub fn get_list(&self) -> Vec<String> {
+    pub fn get_list(&self) -> HashMap<String, ControllerState> {
+        self.game_controllers.lock().unwrap().clone()
+    }
+
+    pub fn get_id_list(&self) -> Vec<String> {
         self.game_controllers.lock().unwrap().keys().cloned().collect()
+    }
+
+    pub fn get_controllers_state(&self) -> Vec<ControllerState> {
+        self.game_controllers.lock().unwrap().values().cloned().collect()
     }
 
     pub fn get_controller(&self, id: String) -> Option<ControllerState> {
@@ -70,7 +82,7 @@ impl ControllerManager {
     }
 
     pub fn update_controller_state_by_index(&self, index: usize) -> Option<ControllerState> {
-        let id = self.get_list().get(index)?.clone();
+        let id = self.get_id_list().get(index)?.clone();
         self.update_controller_state(id)
     }
 
