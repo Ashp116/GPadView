@@ -46,6 +46,61 @@ impl eframe::App for App {
         }
         ctx.set_visuals(egui::Visuals::dark());
 
+        egui::TopBottomPanel::bottom("footer")
+            .frame(egui::Frame::NONE.fill(Color32::from_rgb(10, 10, 16)))
+            .exact_height(28.0)
+            .show(ctx, |ui| {
+                ui.horizontal_centered(|ui| {
+                    ui.add_space(16.0);
+
+                    ui.label(
+                        egui::RichText::new(concat!("GPadView v", env!("CARGO_PKG_VERSION")))
+                            .size(11.0)
+                            .color(Color32::from_rgb(90, 90, 90)),
+                    );
+
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        ui.add_space(16.0);
+
+                        let github = ui.add(
+                            egui::Label::new(
+                                egui::RichText::new("GitHub")
+                                    .size(11.0)
+                                    .color(Color32::from_rgb(90, 90, 90)),
+                            )
+                                .sense(egui::Sense::click()),
+                        );
+                        if github.hovered() {
+                            ctx.set_cursor_icon(egui::CursorIcon::PointingHand);
+                        }
+                        if github.clicked() {
+                            ctx.open_url(egui::OpenUrl::new_tab("https://github.com/yourname/gpadview"));
+                        }
+
+                        ui.label(
+                            egui::RichText::new("•")
+                                .size(11.0)
+                                .color(Color32::from_rgb(40, 40, 55)),
+                        );
+
+                        let license = ui.add(
+                            egui::Label::new(
+                                egui::RichText::new("MIT License")
+                                    .size(11.0)
+                                    .color(Color32::from_rgb(90, 90, 90)),
+                            )
+                                .sense(egui::Sense::click()),
+                        );
+                        if license.hovered() {
+                            ctx.set_cursor_icon(egui::CursorIcon::PointingHand);
+                        }
+                        if license.clicked() {
+                            ctx.open_url(egui::OpenUrl::new_tab("https://github.com/yourname/gpadview/blob/main/LICENSE"));
+                        }
+                    });
+                });
+            });
+        
         let controllers = self.controller_manager.get_controllers_state();
         egui::CentralPanel::default()
             .frame(egui::Frame::NONE.fill(Color32::from_rgb(12, 12, 18)))
